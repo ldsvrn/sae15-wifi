@@ -12,7 +12,7 @@ Créer l'environnement virtuel:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip3 -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 Mettre à jour le fichier requirements.txt:
