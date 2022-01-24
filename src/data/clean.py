@@ -8,6 +8,7 @@ if __name__ == '__main__':
     parser.add_argument("-i", help="path of the input file", required=True)
     parser.add_argument("-o", help="path of the output file", required=True)
     parser.add_argument("--networks", help="comma separated lists of networks")
+    parser.add_argument("--keepids", help="keep IDs that are not integers", nargs='?', const=True, type=bool)
     args = parser.parse_args()
 
     df = pd.read_csv(args.i)
@@ -23,10 +24,12 @@ if __name__ == '__main__':
                 df.drop(x, inplace=True)
 
     # TODO: quel résaux wifi garder? ExpId avec virgules???
-    # pour l'instant, on ne garde pas les ExpId à virgules
-    for x in df.index:
-        if not df.loc[x, "ExpId"].is_integer():
-            df.drop(x, inplace=True)
+
+    if args.keepids == False:
+        # pour l'instant, on ne garde pas les ExpId à virgules
+        for x in df.index:
+            if not df.loc[x, "ExpId"].is_integer():
+                df.drop(x, inplace=True)
 
     # pour l'instant, on garde que si le RSSI est entre 0 et -100
     for x in df.index:
