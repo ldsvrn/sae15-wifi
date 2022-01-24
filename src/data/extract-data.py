@@ -4,41 +4,51 @@
 import os
 import argparse
 
-def ExtractFolderName (path):
+
+def ExtractFolderName(path):
     return (path.split("/")[4])
 
-def ExtractFileName (path):
+
+def ExtractFileName(path):
     return (path.split("/")[5])
 
-def ExtractPlace (folderName) :
-    #@TODO
 
-def ExtractDate (folderName) :
-    #@TODO
+def ExtractPlace(folderName):
+    pass
 
-def ExtractIdExp (fileName) :
-    #@TODO
 
-def ExtractSsid (content) :
-    #@TODO
+def ExtractDate(folderName):
+    pass
 
-def ExtractMacAddr (content) :
-    #@TODO
-    
-def ExtractRssi (content) :
-    #@TODO
+
+def ExtractIdExp(fileName):
+    pass
+
+
+def ExtractSsid(content):
+    pass
+
+
+def ExtractMacAddr(content):
+    pass
+
+
+def ExtractRssi(content):
+    pass
+
 
 def ExtractInfo(path):
-    folderName = ExtractFolderName(path) # Extract folder name
-    fileName = ExtractFileName(path) # Extract filename
-    result=""
+    folderName = ExtractFolderName(path)  # Extract folder name
+    fileName = ExtractFileName(path)  # Extract filename
+    result = ""
     descRd = None
     descRd = open(path, "r")
     content = descRd.readlines()
-    for idx in content :
-      #@TODO
+    for idx in content:
+    # @TODO
     descRd.close()
-    return(result)
+    return (result)
+
 
 if __name__ == '__main__':
     # declare variables
@@ -52,10 +62,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Extract information from Wi-Fi logs')
     parser.add_argument("-input", help="path of the input file", required=True)
     args = parser.parse_args()
-    
+
     if os.path.isfile(args.input):
         result = ExtractInfo(args.input)
-        descWr = open("../../data/processed/wifi.csv","w")
+        descWr = open("../../data/processed/wifi.csv", "w")
         descWr.write("Location,Date,ExpId,SSID,Addr,RSSI\n")
         descWr.write(result)
         descWr.close()
@@ -63,15 +73,14 @@ if __name__ == '__main__':
         listFiles = os.listdir(args.input)
         for fichier in listFiles:
             if isFileCreated == False:
-                descWr = open("../../data/processed/wifi.csv","w")
+                descWr = open("../../data/processed/wifi.csv", "w")
                 descWr.write("Building,Date,ExpId,SSID,Addr,RSSI\n")
                 descWr.close()
                 isFileCreated = True
-            result= ExtractInfo(args.input+fichier)
-            descWr = open("../../data/processed/wifi.csv","a")
+            result = ExtractInfo(args.input + fichier)
+            descWr = open("../../data/processed/wifi.csv", "a")
             descWr.write(result)
             descWr.close()
-            result=""
-    else :
+            result = ""
+    else:
         print("Erreur : le fichier ou le dossier n'existe pas")
-        
