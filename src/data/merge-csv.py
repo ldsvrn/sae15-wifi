@@ -8,7 +8,7 @@ import pandas as pd
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Merge and sort csv')
     parser.add_argument("-i", help="path of the input folder", required=True)
-    parser.add_argument("-o", help="path of te output file", default="wifi-merged.csv")
+    parser.add_argument("-o", help="path of the output file", default="wifi-merged.csv")
     args = parser.parse_args()
 
     files = glob(os.path.join(args.i, "wifi*.csv"))
