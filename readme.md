@@ -1,12 +1,33 @@
 # Projet Wi-fi UHA
 
-## Synopsis
+## Utilisation:
+
+Cloner le repo (avec clef SSH):
+```bash
+git clone git@github.com:ldsvrn/sae15-wifi.git
+```
+
+Créer l'environnement virtuel:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip3 -r requirements.txt
+```
+
+Mettre à jour le fichier requirements.txt:
+```bash
+pip3 freeze > requirements.txt
+```
+
+## Sujet:
+
+### Synopsis
 Le projet Wi-Fi UHA consiste à analyser les données relatives à l'enregistrement de la puissance du signal Wi-Fi généré par les points d'accès dans le bâtiment C. 
 
-## Données
+### Données
 Les données obtenus à partir du Fipy Pycomm et ont été sauvegardées dans le dossier *data/raw*. Il contient deux dossiers l'un relatif à une série de mesures effectuées au rez-de-chaussée du bâtiment C, l'autre à une série de mesure au premier étage du bâtiment C. 
 
-## Tâches
+### Tâches
 Les tâches demandées dans ce projet sont les suivantes.
 
 1. Compléter le programme src/data/extract-data.py afin de formater le jeux de données dans un fichier csv.
