@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 def ComputeMean():
     mean = 0
     return mean

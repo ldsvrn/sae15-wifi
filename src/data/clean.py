@@ -7,6 +7,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Cleans results')
     parser.add_argument("-i", help="path of the input file", required=True)
     parser.add_argument("-o", help="path of the output file", required=True)
+    parser.add_argument("--networks", help="comma separated lists of networks")
     args = parser.parse_args()
 
     df = pd.read_csv(args.i)
@@ -15,7 +16,17 @@ if __name__ == '__main__':
     # if null value, delete the row
     df.dropna(inplace=True)
 
-    # TODO: quel résaux wifi garder? virer "P.H. EST PARMIS NOUS"?
+    if args.networks != None:
+        networks = args.networks.split(",")
+        for x in df.index:
+            if df.loc[x, "SSID"] not in networks:
+                df.drop(x, inplace=True)
+
+    # TODO: quel résaux wifi garder? ExpId avec virgules???
+    # pour l'instant, on ne garde pas les ExpId à virgules
+    for x in df.index:
+        if not df.loc[x, "ExpId"].is_integer():
+            df.drop(x, inplace=True)
 
     # pour l'instant, on garde que si le RSSI est entre 0 et -100
     for x in df.index:
