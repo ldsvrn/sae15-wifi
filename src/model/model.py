@@ -1,11 +1,8 @@
- 
-
 def ComputeMean():
     mean = 0
-    return (mean)
+    return mean
 
-def ComputeMedian:
+
+def ComputeMedian():
     median = 0
-    return (median)    
-    
-    
+    return median

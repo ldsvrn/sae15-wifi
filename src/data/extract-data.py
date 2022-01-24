@@ -6,35 +6,35 @@ import argparse
 
 
 def ExtractFolderName(path):
-    return (path.split("/")[4])
+    return path.split("/")[4]
 
 
 def ExtractFileName(path):
-    return (path.split("/")[5])
+    return path.split("/")[5]
 
 
 def ExtractPlace(folderName):
-    pass
+    return folderName.split("-")[1]
 
 
 def ExtractDate(folderName):
-    pass
+    return folderName.split("-")[2]
 
 
 def ExtractIdExp(fileName):
-    pass
+    return fileName.split("-")[-1]
 
 
 def ExtractSsid(content):
-    pass
+    return content.split("'")[0][:-1]
 
 
 def ExtractMacAddr(content):
-    pass
+    return content.split("'")[1]
 
 
 def ExtractRssi(content):
-    pass
+    return content.split("'")[2]
 
 
 def ExtractInfo(path):
@@ -45,9 +45,10 @@ def ExtractInfo(path):
     descRd = open(path, "r")
     content = descRd.readlines()
     for idx in content:
-    # @TODO
+        result += f"{ExtractPlace(folderName)},{ExtractDate(folderName)},{ExtractIdExp(fileName)}," \
+                  f"{ExtractSsid(idx)},{ExtractMacAddr(idx)},{ExtractRssi(idx)}"
     descRd.close()
-    return (result)
+    return result
 
 
 if __name__ == '__main__':
