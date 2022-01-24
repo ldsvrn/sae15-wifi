@@ -1,7 +1,8 @@
 # Projet Wi-fi UHA
 
-## Utilisation:
+## Programme:
 
+### Installation
 Cloner le repo (avec clef SSH):
 ```bash
 git clone git@github.com:ldsvrn/sae15-wifi.git
@@ -17,6 +18,17 @@ pip3 -r requirements.txt
 Mettre à jour le fichier requirements.txt:
 ```bash
 pip3 freeze > requirements.txt
+```
+
+### Utilisation:
+Parser pour extraire les données brutes:
+```bash
+src/data/extract-data.py -i *path raw dataset* -o *csv output path*
+```
+
+Script pour fusionner les csv et trier par ExpId:
+```bash
+src/data/merge-csv.py -i *csv dataset folder* -o *merged csv*
 ```
 
 ## Sujet:
