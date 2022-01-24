@@ -6,11 +6,11 @@ import argparse
 
 
 def ExtractFolderName(path):
-    return path.split("/")[4]
+    return os.path.dirname(path)
 
 
 def ExtractFileName(path):
-    return path.split("/")[5]
+    return os.path.basename(path)
 
 
 def ExtractPlace(folderName):
@@ -18,7 +18,8 @@ def ExtractPlace(folderName):
 
 
 def ExtractDate(folderName):
-    return folderName.split("-")[2]
+    temp = folderName.split("-")[2]
+    return f"{temp.split('_')[2]}-{temp.split('_')[1]}-{temp.split('_')[0]}" # ISO8601 date format
 
 
 def ExtractIdExp(fileName):
@@ -61,25 +62,26 @@ if __name__ == '__main__':
 
     # define arguments
     parser = argparse.ArgumentParser(description='Extract information from Wi-Fi logs')
-    parser.add_argument("-input", help="path of the input file", required=True)
+    parser.add_argument("-i", help="path of the input file", required=True)
+    parser.add_argument("-o", help="path of the output file", default="../../data/processed/wifi.csv")
     args = parser.parse_args()
 
-    if os.path.isfile(args.input):
-        result = ExtractInfo(args.input)
-        descWr = open("../../data/processed/wifi.csv", "w")
+    if os.path.isfile(args.i):
+        result = ExtractInfo(args.i)
+        descWr = open(args.o, "w")
         descWr.write("Location,Date,ExpId,SSID,Addr,RSSI\n")
         descWr.write(result)
         descWr.close()
-    elif os.path.isdir(args.input):
-        listFiles = os.listdir(args.input)
+    elif os.path.isdir(args.i):
+        listFiles = os.listdir(args.i)
         for fichier in listFiles:
             if isFileCreated == False:
-                descWr = open("../../data/processed/wifi.csv", "w")
+                descWr = open(args.o, "w")
                 descWr.write("Building,Date,ExpId,SSID,Addr,RSSI\n")
                 descWr.close()
                 isFileCreated = True
-            result = ExtractInfo(args.input + fichier)
-            descWr = open("../../data/processed/wifi.csv", "a")
+            result = ExtractInfo(args.i + fichier)
+            descWr = open(args.o, "a")
             descWr.write(result)
             descWr.close()
             result = ""
