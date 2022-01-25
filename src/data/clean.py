@@ -1,42 +1,66 @@
 #!/usr/bin/env python3
-
 import pandas as pd
-import argparse
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Cleans results')
-    parser.add_argument("-i", help="path of the input file", required=True)
-    parser.add_argument("-o", help="path of the output file", required=True)
-    parser.add_argument("--networks", help="comma separated list of networks")
-    parser.add_argument("--no-duplicates", help="remove duplicates", nargs='?', const=True, type=bool, default=False)
-    args = parser.parse_args()
 
-    df = pd.read_csv(args.i)
-    totalLines = len(df)
+class Cleaner:
+    def __init__(self, input_path, networks="uha", drop_duplicates=False):
+        self.networks = networks.split(",")
+        self.drop_duplicates = drop_duplicates
+        self.df = pd.read_csv(input_path)
+        self.totalLines = len(self.df)
 
-    # if null value, delete the row
-    df.dropna(inplace=True)
+        # delete reasons
+        self.deleted_null = 0
+        self.deleted_duplicates = 0
+        self.deleted_SSID = 0
+        self.deleted_RSSI = 0
+        self.deleted_MAC = 0
 
-    # delete all duplicates
-    if args.no_duplicates:
-        df.drop_duplicates(inplace=True)
+    def clean(self):
+        # if null value, delete the row
+        temp = len(self.df)
+        self.df.dropna(inplace=True)
+        self.deleted_null = temp - len(self.df)
 
-    if args.networks is not None:
-        networks = args.networks.split(",")
-        for x in df.index:
-            if df.loc[x, "SSID"] not in networks:
-                df.drop(x, inplace=True)
+        # delete all duplicates
+        temp = len(self.df)
+        if self.drop_duplicates:
+            self.df.drop_duplicates(inplace=True)
+        self.deleted_duplicates = temp - len(self.df)
 
-    # TODO: pour l'instant, on garde que si le RSSI est entre 0 et -100
-    for x in df.index:
-        if df.loc[x, "RSSI"] < -100 or df.loc[x, "RSSI"] > 0:
-            df.drop(x, inplace=True)
+        temp = len(self.df)
+        for x in self.df.index:
+            if self.df.loc[x, "SSID"] not in networks:
+                self.df.drop(x, inplace=True)
+        self.deleted_SSID = temp - len(self.df)
 
-    # if mac address is not 12 characters, delete the row
-    for x in df.index:
-        if len(df.loc[x, "Addr"]) != 12:
-            df.drop(x, inplace=True)
+        temp = len(self.df)
+        for x in self.df.index:
+            if self.df.loc[x, "RSSI"] < -100 or self.df.loc[x, "RSSI"] > -10:
+                self.df.drop(x, inplace=True)
+        self.deleted_RSSI = temp - len(self.df)
 
-    df.to_csv(args.o, index=False)
-    droppedLines = totalLines - len(df)
-    print(f"{droppedLines} lignes sur {totalLines} ont été supprimées soit {round(droppedLines/totalLines*100, 3)}%")
+        # if mac address is not 12 characters, delete the row
+        temp = len(self.df)
+        for x in self.df.index:
+            if len(self.df.loc[x, "Addr"]) != 12:
+                self.df.drop(x, inplace=True)
+        self.deleted_MAC = temp - len(self.df)
+
+    def to_csv(self, output_path):
+        self.df.to_csv(output_path, index=False)
+
+    def get_delete_reason(self):
+        return {
+            "null": self.deleted_null,
+            "duplicates": self.deleted_duplicates,
+            "SSID": self.deleted_SSID,
+            "RSSI": self.deleted_RSSI,
+            "MAC": self.deleted_MAC
+        }
+
+    def get_lines(self):
+        return len(self.df)
+
+    def get_original_lines(self):
+        return self.totalLines
