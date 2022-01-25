@@ -7,14 +7,13 @@ class Cleaner:
         self.networks = networks.split(",")
         self.drop_duplicates = drop_duplicates
         self.df = pd.read_csv(input_path)
-        self.totalLines = len(self.df)
 
         # delete reasons
         self.deleted_null = 0
         self.deleted_duplicates = 0
         self.deleted_SSID = 0
         self.deleted_RSSI = 0
-        self.deleted_MAC = 0
+        # self.deleted_MAC = 0
 
     def clean(self):
         # if null value, delete the row
@@ -30,37 +29,54 @@ class Cleaner:
 
         temp = len(self.df)
         for x in self.df.index:
-            if self.df.loc[x, "SSID"] not in networks:
-                self.df.drop(x, inplace=True)
-        self.deleted_SSID = temp - len(self.df)
-
-        temp = len(self.df)
-        for x in self.df.index:
             if self.df.loc[x, "RSSI"] < -100 or self.df.loc[x, "RSSI"] > -10:
                 self.df.drop(x, inplace=True)
         self.deleted_RSSI = temp - len(self.df)
 
         # if mac address is not 12 characters, delete the row
+        # temp = len(self.df)
+        # for x in self.df.index:
+        #     if len(self.df.loc[x, "Addr"]) != 12:
+        #         self.df.drop(x, inplace=True)
+        # self.deleted_MAC = temp - len(self.df)
+
         temp = len(self.df)
         for x in self.df.index:
-            if len(self.df.loc[x, "Addr"]) != 12:
+            if self.df.loc[x, "SSID"] not in self.networks:
                 self.df.drop(x, inplace=True)
-        self.deleted_MAC = temp - len(self.df)
+        self.deleted_SSID = temp - len(self.df)
 
     def to_csv(self, output_path):
         self.df.to_csv(output_path, index=False)
 
     def get_delete_reason(self):
-        return {
-            "null": self.deleted_null,
-            "duplicates": self.deleted_duplicates,
-            "SSID": self.deleted_SSID,
-            "RSSI": self.deleted_RSSI,
-            "MAC": self.deleted_MAC
-        }
+        if self.drop_duplicates:
+            return {
+                "null": self.deleted_null,
+                "RSSI": self.deleted_RSSI,
+                "duplicates": self.deleted_duplicates,
+                "SSID": self.deleted_SSID
+                # "MAC": self.deleted_MAC
+            }
+        else:
+            return {
+                "null": self.deleted_null,
+                "RSSI": self.deleted_RSSI,
+                "SSID": self.deleted_SSID
+                # "MAC": self.deleted_MAC
+            }
+
+    def get_total_deleted(self):
+        returnval = 0
+        for i in self.get_delete_reason().values():
+            returnval += i
+        return returnval
+
+    def get_explode_val(self):
+        if self.drop_duplicates:
+            return [0.8, 0.8, 0, 0]
+        else:
+            return [0.8, 0.8, 0]
 
     def get_lines(self):
         return len(self.df)
-
-    def get_original_lines(self):
-        return self.totalLines
