@@ -4,7 +4,7 @@ import pandas as pd
 
 class Cleaner:
     def __init__(self, input_path, networks="uha", drop_duplicates=False):
-        self.networks = networks.split(",")
+        self.networks = networks
         self.drop_duplicates = drop_duplicates
         self.df = pd.read_csv(input_path)
 
@@ -14,6 +14,7 @@ class Cleaner:
         self.deleted_SSID = 0
         self.deleted_RSSI = 0
         # self.deleted_MAC = 0
+        print("DEBUG:", self.networks)
 
     def clean(self):
         # if null value, delete the row
@@ -28,9 +29,7 @@ class Cleaner:
         self.deleted_duplicates = temp - len(self.df)
 
         temp = len(self.df)
-        for x in self.df.index:
-            if self.df.loc[x, "RSSI"] < -100 or self.df.loc[x, "RSSI"] > -10:
-                self.df.drop(x, inplace=True)
+        self.df = self.df.loc[(self.df["RSSI"] <= -10) & (self.df["RSSI"] >= -100)]
         self.deleted_RSSI = temp - len(self.df)
 
         # if mac address is not 12 characters, delete the row
@@ -41,9 +40,7 @@ class Cleaner:
         # self.deleted_MAC = temp - len(self.df)
 
         temp = len(self.df)
-        for x in self.df.index:
-            if self.df.loc[x, "SSID"] not in self.networks:
-                self.df.drop(x, inplace=True)
+        self.df = self.df.loc[self.df["SSID"] == self.networks]
         self.deleted_SSID = temp - len(self.df)
 
     def to_csv(self, output_path):
