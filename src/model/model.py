@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import argparse
-import math
 import pandas as pd
 import statistics as stats
 
@@ -32,6 +30,11 @@ class Model:
                                           (self.df["Addr"] == mac_address)]["RSSI"])
         except stats.StatisticsError:
             return 0
+
+    # On peut avoir la moyenne de puissance à un endroit donné avec model.mean_mac_loc(model.get_most_powerful(i), i)
+    def get_most_powerful(self, location):
+        return (self.df.loc[(self.df["ExpId"] >= location) & (self.df["ExpId"] < location + 1)]
+                .sort_values(by=["RSSI"], ascending=False).head(1)["Addr"].values[0])
 
     def get_ap_list(self):
         return self.ap_list
