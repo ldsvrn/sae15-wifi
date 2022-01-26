@@ -72,11 +72,5 @@ class Cleaner:
             returnval += i
         return returnval
 
-    def get_explode_val(self):
-        if self.drop_duplicates:
-            return [0.8, 0.8, 0, 0]
-        else:
-            return [0.8, 0.8, 0]
-
     def get_lines(self):
         return len(self.df)
