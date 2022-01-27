@@ -14,7 +14,6 @@ class Cleaner:
         self.deleted_SSID = 0
         self.deleted_RSSI = 0
         # self.deleted_MAC = 0
-        print("DEBUG:", self.networks)
 
     def clean(self):
         # if null value, delete the row
@@ -45,6 +44,9 @@ class Cleaner:
 
     def to_csv(self, output_path):
         self.df.to_csv(output_path, index=False)
+
+    def get_df(self):
+        return self.df
 
     def get_delete_reason(self):
         if self.drop_duplicates:
