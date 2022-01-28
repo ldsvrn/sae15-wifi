@@ -13,7 +13,6 @@ class Cleaner:
         self.deleted_duplicates = 0
         self.deleted_SSID = 0
         self.deleted_RSSI = 0
-        # self.deleted_MAC = 0
 
     def clean(self):
         # if null value, delete the row
@@ -30,13 +29,6 @@ class Cleaner:
         temp = len(self.df)
         self.df = self.df.loc[(self.df["RSSI"] <= -10) & (self.df["RSSI"] >= -100)]
         self.deleted_RSSI = temp - len(self.df)
-
-        # if mac address is not 12 characters, delete the row
-        # temp = len(self.df)
-        # for x in self.df.index:
-        #     if len(self.df.loc[x, "Addr"]) != 12:
-        #         self.df.drop(x, inplace=True)
-        # self.deleted_MAC = temp - len(self.df)
 
         temp = len(self.df)
         self.df = self.df.loc[self.df["SSID"] == self.networks]
@@ -55,14 +47,12 @@ class Cleaner:
                 "RSSI": self.deleted_RSSI,
                 "duplicates": self.deleted_duplicates,
                 "SSID": self.deleted_SSID
-                # "MAC": self.deleted_MAC
             }
         else:
             return {
                 "null": self.deleted_null,
                 "RSSI": self.deleted_RSSI,
                 "SSID": self.deleted_SSID
-                # "MAC": self.deleted_MAC
             }
 
     def get_total_deleted(self):

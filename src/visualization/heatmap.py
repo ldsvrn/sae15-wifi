@@ -1,11 +1,7 @@
-#!/usr/bin/env python3
-
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+#!/usr/bin/env python
 
 
 class HeatMap:
     def __init__(self, df):
-        
+        pass
 
