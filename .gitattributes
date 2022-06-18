@@ -25,7 +25,7 @@ data/raw/scan_wifi-rdc-25_05_2021/* linguist-generated
 *.pyd    binary
 
 # Jupyter notebook
-*.ipynb  text
+*.ipynb  text linguist-vendored
 
 # Note: .db, .p, and .pkl files are associated
 # with the python modules ``pickle``, ``dbm.*``,
